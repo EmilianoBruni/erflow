@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { GripVertical, X, ChevronDown, ChevronUp } from "lucide-react"
+import { GripVertical, X, ChevronDown, ChevronUp, ArrowUp, ArrowDown } from "lucide-react"
 import type { CardData } from "@/app/page"
 import { RichTextEditor } from "@/components/rich-text-editor"
 
@@ -12,6 +12,10 @@ interface DraggableCardProps {
   card: CardData
   onUpdate: (updates: Partial<CardData>) => void
   onRemove: () => void
+  onMoveUp: () => void
+  onMoveDown: () => void
+  canMoveUp: boolean
+  canMoveDown: boolean
 }
 
 const colorMap = {
@@ -38,7 +42,15 @@ const colorSwatchMap = {
   bianco: "bg-white border-2 border-slate-300",
 }
 
-export function DraggableCard({ card, onUpdate, onRemove }: DraggableCardProps) {
+export function DraggableCard({
+  card,
+  onUpdate,
+  onRemove,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
+}: DraggableCardProps) {
   const printHeader = `${colorNameItalian[card.color as keyof typeof colorNameItalian]} - ${card.patientName} - ${card.patology} - ${card.location} - ${card.moved} - ${card.movedTo}`
 
   return (
@@ -50,6 +62,27 @@ export function DraggableCard({ card, onUpdate, onRemove }: DraggableCardProps) 
           <div className="flex items-center gap-2 mb-0.5 print:hidden">
             <div className="cursor-grab active:cursor-grabbing p-1 hover:bg-black/5 rounded text-slate-700">
               <GripVertical className="w-5 h-5" />
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              <Button
+                onClick={onMoveUp}
+                disabled={!canMoveUp}
+                variant="ghost"
+                size="icon"
+                className="h-4 w-6 text-slate-700 hover:bg-slate-200 disabled:opacity-30 p-0"
+              >
+                <ArrowUp className="w-3 h-3" />
+              </Button>
+              <Button
+                onClick={onMoveDown}
+                disabled={!canMoveDown}
+                variant="ghost"
+                size="icon"
+                className="h-4 w-6 text-slate-700 hover:bg-slate-200 disabled:opacity-30 p-0"
+              >
+                <ArrowDown className="w-3 h-3" />
+              </Button>
             </div>
 
             <Select value={card.color} onValueChange={(value) => onUpdate({ color: value as CardData["color"] })}>

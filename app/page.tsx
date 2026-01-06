@@ -1,5 +1,6 @@
 "use client"
 
+// Card management system with drag-and-drop support
 import type React from "react"
 
 import { useState, useEffect } from "react"
@@ -26,8 +27,6 @@ export default function Page() {
   const [isDark, setIsDark] = useState(false)
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
-  const [touchStartY, setTouchStartY] = useState<number | null>(null)
-  const [touchCurrentY, setTouchCurrentY] = useState<number | null>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -43,7 +42,7 @@ export default function Page() {
         const parsed = JSON.parse(saved)
         setCards(parsed)
       } catch (e) {
-        console.error("[v0] Failed to parse saved cards:", e)
+        console.error("Failed to parse saved cards:", e)
         setCards([createDefaultCard()])
       }
     } else {
@@ -102,42 +101,6 @@ export default function Page() {
     setDraggedIndex(null)
   }
 
-  function handleTouchStart(e: React.TouchEvent, index: number) {
-    setDraggedIndex(index)
-    setTouchStartY(e.touches[0].clientY)
-    setTouchCurrentY(e.touches[0].clientY)
-  }
-
-  function handleTouchMove(e: React.TouchEvent, currentIndex: number) {
-    if (draggedIndex === null || touchStartY === null) return
-
-    const touch = e.touches[0]
-    setTouchCurrentY(touch.clientY)
-
-    // Calculate which card we're over
-    const element = document.elementFromPoint(touch.clientX, touch.clientY)
-    const cardElement = element?.closest("[data-card-index]")
-
-    if (cardElement) {
-      const overIndex = Number.parseInt(cardElement.getAttribute("data-card-index") || "0")
-
-      if (overIndex !== draggedIndex && overIndex !== currentIndex) {
-        const newCards = [...cards]
-        const draggedCard = newCards[draggedIndex]
-        newCards.splice(draggedIndex, 1)
-        newCards.splice(overIndex, 0, draggedCard)
-        setCards(newCards)
-        setDraggedIndex(overIndex)
-      }
-    }
-  }
-
-  function handleTouchEnd() {
-    setDraggedIndex(null)
-    setTouchStartY(null)
-    setTouchCurrentY(null)
-  }
-
   function addCard() {
     setCards([...cards, createDefaultCard()])
   }
@@ -162,6 +125,28 @@ export default function Page() {
     if (confirm("Sei sicuro di voler eliminare tutti i pazienti?")) {
       setCards([])
       localStorage.removeItem("draggable-cards")
+    }
+  }
+
+  function moveCardUp(id: string) {
+    const index = cards.findIndex((c) => c.id === id)
+    if (index > 0) {
+      const newCards = [...cards]
+      const temp = newCards[index]
+      newCards[index] = newCards[index - 1]
+      newCards[index - 1] = temp
+      setCards(newCards)
+    }
+  }
+
+  function moveCardDown(id: string) {
+    const index = cards.findIndex((c) => c.id === id)
+    if (index < cards.length - 1) {
+      const newCards = [...cards]
+      const temp = newCards[index]
+      newCards[index] = newCards[index + 1]
+      newCards[index + 1] = temp
+      setCards(newCards)
     }
   }
 
@@ -278,25 +263,16 @@ export default function Page() {
                 )
               }
               onDragEnd={handleDragEnd}
-              onTouchStart={(e) =>
-                handleTouchStart(
-                  e,
-                  cards.findIndex((c) => c.id === card.id),
-                )
-              }
-              onTouchMove={(e) =>
-                handleTouchMove(
-                  e,
-                  cards.findIndex((c) => c.id === card.id),
-                )
-              }
-              onTouchEnd={handleTouchEnd}
               className={draggedIndex === cards.findIndex((c) => c.id === card.id) ? "opacity-50" : ""}
             >
               <DraggableCard
                 card={card}
                 onUpdate={(updates) => updateCard(card.id, updates)}
                 onRemove={() => removeCard(card.id)}
+                onMoveUp={() => moveCardUp(card.id)}
+                onMoveDown={() => moveCardDown(card.id)}
+                canMoveUp={cards.findIndex((c) => c.id === card.id) > 0}
+                canMoveDown={cards.findIndex((c) => c.id === card.id) < cards.length - 1}
               />
             </div>
           ))}
