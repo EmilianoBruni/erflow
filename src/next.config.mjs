@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "export",
-    basePath: "/erflow",
+    output: 'export',
+    basePath: '/erflow',
     typescript: {
-        ignoreBuildErrors: true,
+        ignoreBuildErrors: true
     },
     images: {
-        unoptimized: true,
-    },
+        unoptimized: true
+    }
 };
 
 export default nextConfig;
