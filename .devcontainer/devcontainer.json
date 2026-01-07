@@ -1,0 +1,27 @@
+{
+    "name": "Erflow Next.js Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+    "features": {
+        "ghcr.io/devcontainers-extra/features/pnpm:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.defaultProfile.osx": "bash",
+                "terminal.integrated.defaultProfile.windows": "Git Bash"
+            }
+        }
+    },
+    "forwardPorts": [
+        3000
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Application",
+            "onAutoForward": "notify"
+        }
+    },
+    "postCreateCommand": "cd src && pnpm install",
+    "remoteUser": "node"
+}
