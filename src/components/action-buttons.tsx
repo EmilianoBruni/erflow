@@ -1,7 +1,22 @@
 'use client';
 
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, ChevronsDown, ChevronsUp, Trash2 } from 'lucide-react';
+import {
+    Plus,
+    ChevronsDown,
+    ChevronsUp,
+    Trash2,
+    Download,
+    Upload
+} from 'lucide-react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from '@/components/ui/select';
 
 interface ActionButtonsProps {
     isDark: boolean;
@@ -10,6 +25,9 @@ interface ActionButtonsProps {
     onExpandAll: () => void;
     onDeleteAll: () => void;
     onAddCard: () => void;
+    onExportJson?: () => void;
+    onImportJson?: (text: string) => void;
+    onImportClipboard?: () => void;
 }
 
 export function ActionButtons({
@@ -18,7 +36,10 @@ export function ActionButtons({
     onCollapseAll,
     onExpandAll,
     onDeleteAll,
-    onAddCard
+    onAddCard,
+    onExportJson,
+    onImportJson,
+    onImportClipboard
 }: ActionButtonsProps) {
     const baseCardStyles = {
         backgroundColor: isDark ? '#1e293b' : 'white',
@@ -27,8 +48,22 @@ export function ActionButtons({
         cursor: 'pointer'
     };
 
+    const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const text = String(reader.result || '');
+            onImportJson && onImportJson(text);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        };
+        reader.readAsText(file);
+    }
+
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
             <Button
                 onClick={onToggleDark}
                 variant="outline"
@@ -86,6 +121,59 @@ export function ActionButtons({
             >
                 <Plus className="w-4 h-4" />
             </Button>
+            {onExportJson && (
+                <Button
+                    onClick={onExportJson}
+                    variant="outline"
+                    size="sm"
+                    className="border bg-transparent cursor-pointer"
+                    style={baseCardStyles}
+                    title="Esporta pazienti in JSON"
+                >
+                    <Download className="w-4 h-4" />
+                </Button>
+            )}
+            {(onImportJson || onImportClipboard) && (
+                <div className="flex items-center">
+                    <Select
+                        onValueChange={value => {
+                            if (value === 'json') {
+                                fileInputRef.current?.click();
+                            } else if (value === 'clipboard') {
+                                onImportClipboard && onImportClipboard();
+                            }
+                        }}
+                    >
+                        <SelectTrigger
+                            size="sm"
+                            className="min-w-[8rem]"
+                            aria-label="Importa"
+                        >
+                            <SelectValue placeholder="Importa" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="json">
+                                <span className="inline-flex items-center gap-2">
+                                    <Upload className="w-4 h-4" /> Importa JSON
+                                </span>
+                            </SelectItem>
+                            <SelectItem value="clipboard">
+                                <span className="inline-flex items-center gap-2">
+                                    <Upload className="w-4 h-4" /> Importa da
+                                    Appunti
+                                </span>
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="application/json,.json"
+                        className="hidden"
+                        onChange={handleFileChange}
+                    />
+                </div>
+            )}
         </div>
     );
 }
