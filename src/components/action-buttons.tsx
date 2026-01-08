@@ -45,7 +45,7 @@ export function ActionButtons({
                 size="sm"
                 className="border bg-transparent cursor-pointer"
                 style={baseCardStyles}
-                title="Collassa tutti"
+                title="Collassa tutti (CTRL-ALT-C)"
             >
                 <ChevronsUp className="w-4 h-4" />
             </Button>
@@ -55,7 +55,7 @@ export function ActionButtons({
                 size="sm"
                 className="border bg-transparent cursor-pointer"
                 style={baseCardStyles}
-                title="Espandi tutti"
+                title="Espandi tutti (CTRL-ALT-U)"
             >
                 <ChevronsDown className="w-4 h-4" />
             </Button>
@@ -82,7 +82,7 @@ export function ActionButtons({
                     color: isDark ? 'black' : 'white',
                     cursor: 'pointer'
                 }}
-                title="Aggiungi paziente"
+                title="Aggiungi paziente (CTRL-ALT-P)"
             >
                 <Plus className="w-4 h-4" />
             </Button>
