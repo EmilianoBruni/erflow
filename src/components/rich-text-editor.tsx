@@ -30,12 +30,14 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 
     const adjustHeight = () => {
-        if (editorRef.current && !window.matchMedia('print').matches) {
+        if (editorRef.current) {
             editorRef.current.style.height = 'auto';
-            editorRef.current.style.height = `${Math.max(
-                75,
-                editorRef.current.scrollHeight
-            )}px`;
+            if (!window.matchMedia('print').matches) {
+                editorRef.current.style.height = `${Math.max(
+                    75,
+                    editorRef.current.scrollHeight
+                )}px`;
+            }
         }
     };
     useEffect(() => {
@@ -44,6 +46,18 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
             adjustHeight();
         }
     }, [value]);
+
+    useEffect(() => {
+        const mediaQueryList = window.matchMedia('print');
+        const handleMediaChange = () => {
+            adjustHeight();
+        };
+
+        mediaQueryList.addEventListener('change', handleMediaChange);
+        return () => {
+            mediaQueryList.removeEventListener('change', handleMediaChange);
+        };
+    }, []);
 
     const handleInput = () => {
         if (editorRef.current) {
