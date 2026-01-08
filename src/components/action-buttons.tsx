@@ -23,7 +23,8 @@ export function ActionButtons({
     const baseCardStyles = {
         backgroundColor: isDark ? '#1e293b' : 'white',
         color: isDark ? 'white' : 'black',
-        borderColor: isDark ? '#475569' : '#cbd5e1'
+        borderColor: isDark ? '#475569' : '#cbd5e1',
+        cursor: 'pointer'
     };
 
     return (
@@ -32,7 +33,7 @@ export function ActionButtons({
                 onClick={onToggleDark}
                 variant="outline"
                 size="sm"
-                className="border"
+                className="border cursor-pointer"
                 style={baseCardStyles}
                 title={isDark ? 'Modalità chiara' : 'Modalità scura'}
             >
@@ -42,7 +43,7 @@ export function ActionButtons({
                 onClick={onCollapseAll}
                 variant="outline"
                 size="sm"
-                className="border bg-transparent"
+                className="border bg-transparent cursor-pointer"
                 style={baseCardStyles}
                 title="Collassa tutti"
             >
@@ -52,7 +53,7 @@ export function ActionButtons({
                 onClick={onExpandAll}
                 variant="outline"
                 size="sm"
-                className="border bg-transparent"
+                className="border bg-transparent cursor-pointer"
                 style={baseCardStyles}
                 title="Espandi tutti"
             >
@@ -62,11 +63,12 @@ export function ActionButtons({
                 onClick={onDeleteAll}
                 variant="outline"
                 size="sm"
-                className="border bg-transparent"
+                className="border bg-transparent cursor-pointer"
                 style={{
                     backgroundColor: isDark ? '#7f1d1d' : '#fecaca',
                     color: isDark ? '#fecaca' : '#7f1d1d',
-                    borderColor: isDark ? '#991b1b' : '#f87171'
+                    borderColor: isDark ? '#991b1b' : '#f87171',
+                    cursor: 'pointer'
                 }}
                 title="Elimina tutti"
             >
@@ -74,9 +76,11 @@ export function ActionButtons({
             </Button>
             <Button
                 onClick={onAddCard}
+                className="cursor-pointer"
                 style={{
                     backgroundColor: isDark ? 'white' : 'blue',
-                    color: isDark ? 'black' : 'white'
+                    color: isDark ? 'black' : 'white',
+                    cursor: 'pointer'
                 }}
                 title="Aggiungi paziente"
             >
