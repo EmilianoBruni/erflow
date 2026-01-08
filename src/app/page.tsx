@@ -237,31 +237,10 @@ export default function Page() {
                 </div>
 
                 <div className="space-y-4">
-                    {filteredCards.map(card => (
+                    {filteredCards.map((card, index) => (
                         <div
                             key={card.id}
-                            data-card-index={cards.findIndex(
-                                c => c.id === card.id
-                            )}
-                            draggable
-                            onDragStart={() =>
-                                handleDragStart(
-                                    cards.findIndex(c => c.id === card.id)
-                                )
-                            }
-                            onDragOver={e =>
-                                handleDragOver(
-                                    e,
-                                    cards.findIndex(c => c.id === card.id)
-                                )
-                            }
-                            onDragEnd={handleDragEnd}
-                            className={
-                                draggedIndex ===
-                                cards.findIndex(c => c.id === card.id)
-                                    ? 'opacity-50'
-                                    : ''
-                            }
+                            onDragOver={e => handleDragOver(e, index)}
                         >
                             <DraggableCard
                                 card={card}
@@ -271,13 +250,10 @@ export default function Page() {
                                 onRemove={() => removeCard(card.id)}
                                 onMoveUp={() => moveCardUp(card.id)}
                                 onMoveDown={() => moveCardDown(card.id)}
-                                canMoveUp={
-                                    cards.findIndex(c => c.id === card.id) > 0
-                                }
-                                canMoveDown={
-                                    cards.findIndex(c => c.id === card.id) <
-                                    cards.length - 1
-                                }
+                                canMoveUp={index > 0}
+                                canMoveDown={index < filteredCards.length - 1}
+                                onDragStart={() => handleDragStart(index)}
+                                onDragEnd={handleDragEnd}
                             />
                         </div>
                     ))}

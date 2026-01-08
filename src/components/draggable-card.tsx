@@ -29,6 +29,8 @@ interface DraggableCardProps {
     onMoveDown: () => void;
     canMoveUp: boolean;
     canMoveDown: boolean;
+    onDragStart?: () => void;
+    onDragEnd?: () => void;
 }
 
 const colorMap = {
@@ -62,7 +64,9 @@ export function DraggableCard({
     onMoveUp,
     onMoveDown,
     canMoveUp,
-    canMoveDown
+    canMoveDown,
+    onDragStart,
+    onDragEnd
 }: DraggableCardProps) {
     const printHeader = `${
         colorNameItalian[card.color as keyof typeof colorNameItalian]
@@ -78,10 +82,16 @@ export function DraggableCard({
                 className={`${
                     colorMap[card.color]
                 } transition-colors border-2 print-card py-2 !bg-opacity-100`}
+                draggable={false}
             >
                 <CardContent className="pt-2 print-content px-2">
                     <div className="flex items-center gap-2 mb-0.5 print:hidden">
-                        <div className="cursor-grab active:cursor-grabbing p-1 hover:bg-black/5 rounded text-slate-700">
+                        <div
+                            draggable
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
+                            className="cursor-grab active:cursor-grabbing p-1 hover:bg-black/5 rounded text-slate-700"
+                        >
                             <GripVertical className="w-5 h-5" />
                         </div>
 
