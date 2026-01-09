@@ -345,9 +345,7 @@ export default function Page() {
                         onExpandAll={expandAll}
                         onDeleteAll={deleteAll}
                         onAddCard={addCard}
-                        onExportJson={exportCardsJson}
-                        onImportJson={importCardsFromJson}
-                        onImportClipboard={importCardsFromClipboard}
+                        colorCounts={colorCounts}
                     />
                 </div>
             </div>

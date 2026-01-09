@@ -95,6 +95,70 @@ export function ActionButtons({
     return (
         <>
             <div className="flex gap-2 items-center">
+                {onExportJson && (
+                    <Button
+                        onClick={onExportJson}
+                        variant="outline"
+                        size="sm"
+                        className="border bg-transparent cursor-pointer"
+                        style={baseCardStyles}
+                        title="Esporta pazienti in JSON"
+                    >
+                        <Download className="w-4 h-4" />
+                    </Button>
+                )}
+                {(onImportJson || onImportClipboard) && (
+                    <>
+                        <div className="relative" ref={menuRef}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="border bg-transparent cursor-pointer"
+                                style={baseCardStyles}
+                                onClick={() => setShowImportMenu(prev => !prev)}
+                                aria-haspopup="menu"
+                                aria-expanded={showImportMenu}
+                            >
+                                <Upload className="w-4 h-4" />
+                            </Button>
+                            {showImportMenu && (
+                                <div
+                                    className="absolute right-0 mt-2 w-48 rounded-md border shadow-lg bg-white text-black z-10"
+                                    role="menu"
+                                >
+                                    <button
+                                        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 flex items-center gap-2"
+                                        onClick={() => {
+                                            setShowImportMenu(false);
+                                            fileInputRef.current?.click();
+                                        }}
+                                    >
+                                        <Upload className="w-4 h-4" /> Importa
+                                        JSON
+                                    </button>
+                                    <button
+                                        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 flex items-center gap-2"
+                                        onClick={() => {
+                                            setShowImportMenu(false);
+                                            setShowPasteModal(true);
+                                        }}
+                                    >
+                                        <Upload className="w-4 h-4" /> Importa
+                                        da DSEO
+                                    </button>
+                                </div>
+                            )}
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="application/json,.json"
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+                        </div>
+                        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                    </>
+                )}
                 {colorCounts && (
                     <div className="flex gap-1.5 items-center mr-2">
                         <div
@@ -126,10 +190,11 @@ export function ActionButtons({
                             {colorCounts.verde}
                         </div>
                         <div
-                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
+                            className="flex items-center justify-center rounded-full w-7 h-7 font-semibold text-sm"
                             style={{
-                                backgroundColor: isDark ? 'white' : 'black',
-                                color: isDark ? 'black' : 'white'
+                                backgroundColor: isDark ? 'white' : 'white',
+                                color: isDark ? 'black' : 'black',
+                                border: isDark ? 'none' : '2px solid black'
                             }}
                             title="Bianco"
                         >
@@ -146,6 +211,7 @@ export function ActionButtons({
                         >
                             {colorCounts.total}
                         </div>
+                        <div className="w-px h-6 bg-gray-300 mx-1"></div>
                     </div>
                 )}
                 <Button
@@ -205,66 +271,6 @@ export function ActionButtons({
                 >
                     <Plus className="w-4 h-4" />
                 </Button>
-                {onExportJson && (
-                    <Button
-                        onClick={onExportJson}
-                        variant="outline"
-                        size="sm"
-                        className="border bg-transparent cursor-pointer"
-                        style={baseCardStyles}
-                        title="Esporta pazienti in JSON"
-                    >
-                        <Download className="w-4 h-4" />
-                    </Button>
-                )}
-                {(onImportJson || onImportClipboard) && (
-                    <div className="relative" ref={menuRef}>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="border bg-transparent cursor-pointer"
-                            style={baseCardStyles}
-                            onClick={() => setShowImportMenu(prev => !prev)}
-                            aria-haspopup="menu"
-                            aria-expanded={showImportMenu}
-                        >
-                            <Upload className="w-4 h-4" />
-                        </Button>
-                        {showImportMenu && (
-                            <div
-                                className="absolute right-0 mt-2 w-48 rounded-md border shadow-lg bg-white text-black z-10"
-                                role="menu"
-                            >
-                                <button
-                                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 flex items-center gap-2"
-                                    onClick={() => {
-                                        setShowImportMenu(false);
-                                        fileInputRef.current?.click();
-                                    }}
-                                >
-                                    <Upload className="w-4 h-4" /> Importa JSON
-                                </button>
-                                <button
-                                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 flex items-center gap-2"
-                                    onClick={() => {
-                                        setShowImportMenu(false);
-                                        setShowPasteModal(true);
-                                    }}
-                                >
-                                    <Upload className="w-4 h-4" /> Importa da
-                                    Testo
-                                </button>
-                            </div>
-                        )}
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="application/json,.json"
-                            className="hidden"
-                            onChange={handleFileChange}
-                        />
-                    </div>
-                )}
             </div>
 
             {showPasteModal && (
