@@ -3,13 +3,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Bold, List, Palette, X, Strikethrough, Settings2 } from 'lucide-react';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select';
 
 interface RichTextEditorProps {
     value: string;
@@ -18,7 +11,7 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     const editorRef = useRef<HTMLDivElement>(null);
-    const [selectedColor, setSelectedColor] = useState('#000000');
+    const [selectedColor, setSelectedColor] = useState('#ff0000');
     const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 
     const adjustHeight = () => {
@@ -72,6 +65,9 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     };
 
     const execCommand = (command: string, value?: string) => {
+        if (editorRef.current) {
+            editorRef.current.focus();
+        }
         document.execCommand(command, false, value);
         editorRef.current?.focus();
     };
@@ -105,17 +101,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                             title="Strikethrough"
                         >
                             <Strikethrough className="w-4 h-4" />
-                        </Button>
-
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-slate-700 hover:bg-slate-200"
-                            onClick={() => execCommand('insertUnorderedList')}
-                            title="Bullet List"
-                        >
-                            <List className="w-4 h-4" />
                         </Button>
 
                         <div className="flex items-center gap-1">
