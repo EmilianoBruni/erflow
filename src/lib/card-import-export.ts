@@ -34,7 +34,7 @@ export function exportCardsToJson(cards: CardData[]): void {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    } catch (e) {
+    } catch {
         alert('Errore durante esportazione JSON');
     }
 }
@@ -83,7 +83,7 @@ export function importCardsFromJson(text: string): CardData[] | null {
             } as CardData;
         });
         return restored;
-    } catch (e) {
+    } catch {
         alert('JSON non valido');
         return null;
     }
@@ -114,7 +114,7 @@ export async function importCardsFromClipboard(): Promise<CardData[] | null> {
             } as CardData;
         });
         return newCards;
-    } catch (e) {
+    } catch {
         alert('Impossibile leggere dagli appunti');
         return null;
     }
