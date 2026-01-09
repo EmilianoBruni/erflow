@@ -28,6 +28,14 @@ interface ActionButtonsProps {
     onExportJson?: () => void;
     onImportJson?: (text: string) => void;
     onImportClipboard?: () => void;
+    colorCounts?: {
+        rosso: number;
+        giallo: number;
+        blu: number;
+        verde: number;
+        bianco: number;
+        total: number;
+    };
 }
 
 export function ActionButtons({
@@ -39,7 +47,8 @@ export function ActionButtons({
     onAddCard,
     onExportJson,
     onImportJson,
-    onImportClipboard
+    onImportClipboard,
+    colorCounts
 }: ActionButtonsProps) {
     const baseCardStyles = {
         backgroundColor: isDark ? '#1e293b' : 'white',
@@ -64,6 +73,59 @@ export function ActionButtons({
 
     return (
         <div className="flex gap-2 items-center">
+            {colorCounts && (
+                <div className="flex gap-1.5 items-center mr-2">
+                    <div
+                        className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
+                        style={{ backgroundColor: '#ef4444' }}
+                        title="Rosso"
+                    >
+                        {colorCounts.rosso}
+                    </div>
+                    <div
+                        className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
+                        style={{ backgroundColor: '#eab308' }}
+                        title="Giallo"
+                    >
+                        {colorCounts.giallo}
+                    </div>
+                    <div
+                        className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
+                        style={{ backgroundColor: '#3b82f6' }}
+                        title="Blu"
+                    >
+                        {colorCounts.blu}
+                    </div>
+                    <div
+                        className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
+                        style={{ backgroundColor: '#22c55e' }}
+                        title="Verde"
+                    >
+                        {colorCounts.verde}
+                    </div>
+                    <div
+                        className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
+                        style={{
+                            backgroundColor: isDark ? 'white' : 'black',
+                            color: isDark ? 'black' : 'white'
+                        }}
+                        title="Bianco"
+                    >
+                        {colorCounts.bianco}
+                    </div>
+                    <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                    <div
+                        className="flex items-center justify-center rounded-full w-8 h-8 font-bold text-sm"
+                        style={{
+                            backgroundColor: isDark ? '#475569' : '#cbd5e1',
+                            color: isDark ? 'white' : 'black'
+                        }}
+                        title="Totale"
+                    >
+                        {colorCounts.total}
+                    </div>
+                </div>
+            )}
             <Button
                 onClick={onToggleDark}
                 variant="outline"
@@ -146,7 +208,7 @@ export function ActionButtons({
                     >
                         <SelectTrigger
                             size="sm"
-                            className="min-w-[8rem]"
+                            className="min-w-32"
                             aria-label="Importa"
                         >
                             <SelectValue placeholder="Importa" />

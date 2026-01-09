@@ -225,7 +225,10 @@ export default function Page() {
                 return {
                     ...base,
                     ...c,
-                    id: typeof c.id === 'string' && c.id.trim() ? c.id : base.id,
+                    id:
+                        typeof c.id === 'string' && c.id.trim()
+                            ? c.id
+                            : base.id,
                     color:
                         c.color === 'rosso' ||
                         c.color === 'giallo' ||
@@ -234,7 +237,10 @@ export default function Page() {
                         c.color === 'bianco'
                             ? c.color
                             : base.color,
-                    moved: c.moved === 'R' || c.moved === 'D' || c.moved === ' ' ? c.moved : base.moved,
+                    moved:
+                        c.moved === 'R' || c.moved === 'D' || c.moved === ' '
+                            ? c.moved
+                            : base.moved,
                     location:
                         c.location === 'OT1' ||
                         c.location === 'OT2' ||
@@ -260,7 +266,10 @@ export default function Page() {
         try {
             const text = await navigator.clipboard.readText();
             // Fake parser: each non-empty line becomes a basic card
-            const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            const lines = text
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .filter(Boolean);
             if (lines.length === 0) {
                 alert('Appunti vuoti o non parsabili');
                 return;
@@ -283,6 +292,15 @@ export default function Page() {
     const filteredCards = cards.filter(card =>
         card.patientName.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const colorCounts = {
+        rosso: cards.filter(c => c.color === 'rosso').length,
+        giallo: cards.filter(c => c.color === 'giallo').length,
+        blu: cards.filter(c => c.color === 'blu').length,
+        verde: cards.filter(c => c.color === 'verde').length,
+        bianco: cards.filter(c => c.color === 'bianco').length,
+        total: cards.length
+    };
 
     return (
         <div
@@ -337,6 +355,7 @@ export default function Page() {
                         onExportJson={exportCardsJson}
                         onImportJson={importCardsFromJson}
                         onImportClipboard={importCardsFromClipboard}
+                        colorCounts={colorCounts}
                     />
                 </div>
 
