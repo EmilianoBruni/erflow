@@ -237,9 +237,8 @@ export function ActionButtons({
                         >
                             {colorCounts.bianco}
                         </div>
-                        <div className="w-px h-6 bg-gray-300 mx-1"></div>
                         <div
-                            className="flex items-center justify-center rounded-full w-8 h-8 font-bold text-sm cursor-pointer transition-transform hover:scale-110"
+                            className="flex items-center justify-center  w-8 h-8 font-bold text-sm cursor-pointer transition-transform hover:scale-110"
                             style={{
                                 backgroundColor: isDark ? '#475569' : '#cbd5e1',
                                 color: isDark ? 'white' : 'black'
