@@ -29,6 +29,8 @@ interface ActionButtonsProps {
         bianco: number;
         total: number;
     };
+    onColorFilter?: (color: string | null) => void;
+    selectedColor?: string | null;
 }
 
 export function ActionButtons({
@@ -41,7 +43,9 @@ export function ActionButtons({
     onExportJson,
     onImportJson,
     onImportClipboard,
-    colorCounts
+    colorCounts,
+    onColorFilter,
+    selectedColor
 }: ActionButtonsProps) {
     const baseCardStyles = {
         backgroundColor: isDark ? '#1e293b' : 'white',
@@ -162,52 +166,86 @@ export function ActionButtons({
                 {colorCounts && (
                     <div className="flex gap-1.5 items-center mr-2">
                         <div
-                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
-                            style={{ backgroundColor: '#ef4444' }}
+                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm cursor-pointer transition-transform hover:scale-110"
+                            style={{
+                                backgroundColor: '#ef4444',
+                                outline:
+                                    selectedColor === 'rosso'
+                                        ? '#641713 solid 3px'
+                                        : 'none'
+                            }}
                             title="Rosso"
+                            onClick={() => onColorFilter?.('rosso')}
                         >
                             {colorCounts.rosso}
                         </div>
                         <div
-                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
-                            style={{ backgroundColor: '#eab308' }}
+                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm cursor-pointer transition-transform hover:scale-110"
+                            style={{
+                                backgroundColor: '#eab308',
+                                outline:
+                                    selectedColor === 'giallo'
+                                        ? '#EE00EA solid 3px'
+                                        : 'none'
+                            }}
                             title="Giallo"
+                            onClick={() => onColorFilter?.('giallo')}
                         >
                             {colorCounts.giallo}
                         </div>
                         <div
-                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
-                            style={{ backgroundColor: '#3b82f6' }}
+                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm cursor-pointer transition-transform hover:scale-110"
+                            style={{
+                                backgroundColor: '#3b82f6',
+                                outline:
+                                    selectedColor === 'blu'
+                                        ? '#EE00EA solid 3px'
+                                        : 'none'
+                            }}
                             title="Blu"
+                            onClick={() => onColorFilter?.('blu')}
                         >
                             {colorCounts.blu}
                         </div>
                         <div
-                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm"
-                            style={{ backgroundColor: '#22c55e' }}
+                            className="flex items-center justify-center rounded-full w-7 h-7 text-white font-semibold text-sm cursor-pointer transition-transform hover:scale-110"
+                            style={{
+                                backgroundColor: '#22c55e',
+                                outline:
+                                    selectedColor === 'verde'
+                                        ? '#EE00EA solid 3px'
+                                        : 'none'
+                            }}
                             title="Verde"
+                            onClick={() => onColorFilter?.('verde')}
                         >
                             {colorCounts.verde}
                         </div>
                         <div
-                            className="flex items-center justify-center rounded-full w-7 h-7 font-semibold text-sm"
+                            className="flex items-center justify-center rounded-full w-7 h-7 font-semibold text-sm cursor-pointer transition-transform hover:scale-110"
                             style={{
                                 backgroundColor: isDark ? 'white' : 'white',
                                 color: isDark ? 'black' : 'black',
-                                border: isDark ? 'none' : '2px solid black'
+                                border: isDark ? 'none' : '2px solid black',
+                                outline:
+                                    selectedColor === 'bianco'
+                                        ? '#EE00EA solid 3px'
+                                        : 'none'
                             }}
                             title="Bianco"
+                            onClick={() => onColorFilter?.('bianco')}
                         >
                             {colorCounts.bianco}
                         </div>
                         <div className="w-px h-6 bg-gray-300 mx-1"></div>
                         <div
-                            className="flex items-center justify-center rounded-full w-8 h-8 font-bold text-sm"
+                            className="flex items-center justify-center rounded-full w-8 h-8 font-bold text-sm cursor-pointer transition-transform hover:scale-110"
                             style={{
                                 backgroundColor: isDark ? '#475569' : '#cbd5e1',
                                 color: isDark ? 'white' : 'black'
                             }}
                             title="Totale"
+                            onClick={() => onColorFilter?.(null)}
                         >
                             {colorCounts.total}
                         </div>

@@ -62,6 +62,7 @@ export default function Page() {
 
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [colorFilter, setColorFilter] = useState<string | null>(null);
 
     const addCard = useCallback(() => {
         setCards(prevCards => [...prevCards, createDefaultCard()]);
@@ -204,8 +205,12 @@ export default function Page() {
         }
     }
 
-    const filteredCards = cards.filter(card =>
-        card.patientName.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredCards = cards.filter(
+        card =>
+            card.patientName
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) &&
+            (colorFilter === null || card.color === colorFilter)
     );
 
     const colorCounts = {
@@ -271,6 +276,8 @@ export default function Page() {
                         onImportJson={importCardsFromJson}
                         onImportClipboard={importCardsFromClipboard}
                         colorCounts={colorCounts}
+                        onColorFilter={setColorFilter}
+                        selectedColor={colorFilter}
                     />
                 </div>
 
@@ -346,6 +353,8 @@ export default function Page() {
                         onDeleteAll={deleteAll}
                         onAddCard={addCard}
                         colorCounts={colorCounts}
+                        onColorFilter={setColorFilter}
+                        selectedColor={colorFilter}
                     />
                 </div>
             </div>
