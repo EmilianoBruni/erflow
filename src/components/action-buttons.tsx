@@ -10,13 +10,6 @@ import {
     Download,
     Upload
 } from 'lucide-react';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select';
 
 interface ActionButtonsProps {
     isDark: boolean;
@@ -58,8 +51,34 @@ export function ActionButtons({
     };
 
     const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+    const menuRef = React.useRef<HTMLDivElement | null>(null);
+    const pasteTextareaRef = React.useRef<HTMLTextAreaElement | null>(null);
     const [showPasteModal, setShowPasteModal] = React.useState(false);
+    const [showImportMenu, setShowImportMenu] = React.useState(false);
     const [pasteText, setPasteText] = React.useState('');
+
+    React.useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(e.target as Node)
+            ) {
+                setShowImportMenu(false);
+            }
+        }
+        if (showImportMenu) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
+    }, [showImportMenu]);
+
+    React.useEffect(() => {
+        if (showPasteModal && pasteTextareaRef.current) {
+            pasteTextareaRef.current.focus();
+            pasteTextareaRef.current.select();
+        }
+    }, [showPasteModal]);
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -67,7 +86,7 @@ export function ActionButtons({
         const reader = new FileReader();
         reader.onload = () => {
             const text = String(reader.result || '');
-            onImportJson && onImportJson(text);
+            if (onImportJson) onImportJson(text);
             if (fileInputRef.current) fileInputRef.current.value = '';
         };
         reader.readAsText(file);
@@ -199,38 +218,44 @@ export function ActionButtons({
                     </Button>
                 )}
                 {(onImportJson || onImportClipboard) && (
-                    <div className="flex items-center">
-                        <Select
-                            onValueChange={value => {
-                                if (value === 'json') {
-                                    fileInputRef.current?.click();
-                                } else if (value === 'clipboard') {
-                                    setShowPasteModal(true);
-                                }
-                            }}
+                    <div className="relative" ref={menuRef}>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="border bg-transparent cursor-pointer"
+                            style={baseCardStyles}
+                            onClick={() => setShowImportMenu(prev => !prev)}
+                            aria-haspopup="menu"
+                            aria-expanded={showImportMenu}
                         >
-                            <SelectTrigger
-                                size="sm"
-                                className="min-w-32"
-                                aria-label="Importa"
+                            <Upload className="w-4 h-4" />
+                        </Button>
+                        {showImportMenu && (
+                            <div
+                                className="absolute right-0 mt-2 w-48 rounded-md border shadow-lg bg-white text-black z-10"
+                                role="menu"
                             >
-                                <SelectValue placeholder="Importa" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="json">
-                                    <span className="inline-flex items-center gap-2">
-                                        <Upload className="w-4 h-4" /> Importa
-                                        JSON
-                                    </span>
-                                </SelectItem>
-                                <SelectItem value="clipboard">
-                                    <span className="inline-flex items-center gap-2">
-                                        <Upload className="w-4 h-4" /> Importa
-                                        da DSEO
-                                    </span>
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
+                                <button
+                                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 flex items-center gap-2"
+                                    onClick={() => {
+                                        setShowImportMenu(false);
+                                        fileInputRef.current?.click();
+                                    }}
+                                >
+                                    <Upload className="w-4 h-4" /> Importa JSON
+                                </button>
+                                <button
+                                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 flex items-center gap-2"
+                                    onClick={() => {
+                                        setShowImportMenu(false);
+                                        setShowPasteModal(true);
+                                    }}
+                                >
+                                    <Upload className="w-4 h-4" /> Importa da
+                                    Testo
+                                </button>
+                            </div>
+                        )}
                         <input
                             ref={fileInputRef}
                             type="file"
@@ -256,18 +281,19 @@ export function ActionButtons({
                             className="space-y-3"
                             onSubmit={e => {
                                 e.preventDefault();
-                                onImportClipboard &&
+                                if (onImportClipboard) {
                                     onImportClipboard(pasteText);
+                                }
                                 setPasteText('');
                                 setShowPasteModal(false);
                             }}
                         >
                             <textarea
+                                ref={pasteTextareaRef}
                                 value={pasteText}
                                 onChange={e => setPasteText(e.target.value)}
                                 className="w-full h-64 border border-slate-300 rounded p-2 text-sm text-black"
                                 placeholder="Incolla qui il contenuto da DSEO..."
-                                autoFocus
                             />
                             <div className="flex justify-end gap-2">
                                 <Button
